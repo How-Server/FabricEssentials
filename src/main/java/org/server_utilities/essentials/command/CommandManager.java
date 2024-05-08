@@ -46,14 +46,14 @@ public class CommandManager {
         new SetWarpCommand(),
         new WarpsCommand(),
         // Teleportation
-        new RTPCommand(),
+
         TpaCommand.TPA,
         TpaCommand.TPA_HERE,
         new TpAllCommand(),
         new TpAcceptCommand(),
         new TpDenyCommand(),
         // Util
-        new BackCommand(),
+
         new BroadcastCommand(),
         new CommandSpyCommand(),
         new EssentialsCommand(),
