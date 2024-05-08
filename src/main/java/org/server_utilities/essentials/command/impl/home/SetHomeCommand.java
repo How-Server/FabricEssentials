@@ -5,6 +5,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import org.server_utilities.essentials.command.Command;
 import org.server_utilities.essentials.command.CommandProperties;
 import org.server_utilities.essentials.config.homes.HomesConfig;
@@ -35,26 +37,30 @@ public class SetHomeCommand extends Command {
     @Override
     protected void registerArguments(LiteralArgumentBuilder<CommandSourceStack> literal, CommandBuildContext commandBuildContext) {
         literal
-            .then(
-                argument("home", word())
-                    .then(argument("player", gameProfile()).suggests(PROFILES_PROVIDER)
-                        .requires(require("other"))
-                        .then(literal("-confirm")
-                            .executes(ctx -> setHome(ctx.getSource(), getString(ctx, "home"), getGameProfile(ctx, "player"), false, true))
-                        )
-                        .executes(ctx -> setHome(ctx.getSource(), getString(ctx, "home"), getGameProfile(ctx, "player"), false, false))
-                    ).then(literal("-confirm")
-                        .executes(ctx -> setHome(ctx.getSource(), getString(ctx, "home"), ctx.getSource().getPlayerOrException().getGameProfile(), true, true))
-                    )
-                    .executes(ctx -> setHome(ctx.getSource(), getString(ctx, "home"), ctx.getSource().getPlayerOrException().getGameProfile(), true, false))
-            )
-            .executes(ctx -> setHome(ctx.getSource(), DEFAULT_HOME_NAME, ctx.getSource().getPlayerOrException().getGameProfile(), true, false));
+                .then(
+                        argument("home", word())
+                                .then(argument("player", gameProfile()).suggests(PROFILES_PROVIDER)
+                                        .requires(require("other"))
+                                        .then(literal("-confirm")
+                                                .executes(ctx -> setHome(ctx.getSource(), getString(ctx, "home"), getGameProfile(ctx, "player"), false, true))
+                                        )
+                                        .executes(ctx -> setHome(ctx.getSource(), getString(ctx, "home"), getGameProfile(ctx, "player"), false, false))
+                                ).then(literal("-confirm")
+                                        .executes(ctx -> setHome(ctx.getSource(), getString(ctx, "home"), ctx.getSource().getPlayerOrException().getGameProfile(), true, true))
+                                )
+                                .executes(ctx -> setHome(ctx.getSource(), getString(ctx, "home"), ctx.getSource().getPlayerOrException().getGameProfile(), true, false))
+                )
+                .executes(ctx -> setHome(ctx.getSource(), DEFAULT_HOME_NAME, ctx.getSource().getPlayerOrException().getGameProfile(), true, false));
     }
 
     protected int setHome(CommandSourceStack src, String name, GameProfile target, boolean self, boolean confirm) {
         PlayerData playerData = DataStorage.getOfflinePlayerData(src.getServer(), target.getId());
         Map<String, Home> homes = playerData.homes;
         Home previousHome = homes.get(name);
+        if (!src.getLevel().dimension().equals(Level.OVERWORLD) && !src.getLevel().dimension().equals(Level.NETHER) && !src.getLevel().dimension().equals(Level.END) && !src.hasPermission(4)){
+            src.sendFailure(Component.nullToEmpty("您無法在此維度建立 Home點"));
+            return FAILURE;
+        }
         if (previousHome != null && !confirm) {
             if (self) {
                 src.sendFailure(localized("fabric-essentials.commands.sethome.self.confirm", previousHome.placeholders(name)));
@@ -65,7 +71,7 @@ public class SetHomeCommand extends Command {
         }
         int limit = getHomesLimit(src);
         boolean overwrite = confirm && previousHome != null;
-        if (homes.size() >= limit && !overwrite) {
+        if (homes.size() >= limit) {
             src.sendFailure(localized("fabric-essentials.commands.sethome.limit"));
             return FAILURE;
         }
