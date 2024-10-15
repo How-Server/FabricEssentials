@@ -13,6 +13,8 @@ import me.drex.essentials.storage.DataStorage;
 import me.drex.essentials.storage.PlayerData;
 import me.drex.essentials.util.teleportation.Home;
 import me.drex.essentials.util.teleportation.Location;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 
 import java.util.Map;
 
@@ -52,6 +54,10 @@ public class SetHomeCommand extends Command {
     }
 
     protected int setHome(CommandSourceStack src, String name, GameProfile target, boolean self, boolean confirm) {
+        if (!src.getLevel().dimension().equals(Level.OVERWORLD) && !src.getLevel().dimension().equals(Level.NETHER) && !src.getLevel().dimension().equals(Level.END) && !src.hasPermission(4)){
+            src.sendFailure(Component.nullToEmpty("您無法在此維度建立 Home點"));
+            return FAILURE;
+        }
         PlayerData playerData = DataStorage.getOfflinePlayerData(src.getServer(), target.getId());
         Map<String, Home> homes = playerData.homes;
         Home previousHome = homes.get(name);
@@ -65,7 +71,7 @@ public class SetHomeCommand extends Command {
         }
         int limit = getHomesLimit(src);
         boolean overwrite = confirm && previousHome != null;
-        if (homes.size() >= limit && !overwrite) {
+        if (homes.size() >= limit) {
             src.sendFailure(localized("fabric-essentials.commands.sethome.limit"));
             return FAILURE;
         }
