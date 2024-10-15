@@ -35,7 +35,7 @@ public class TeleportCommandMixin {
             // And the affected entity was also a player
             PlayerData playerData = DataStorage.updatePlayerData(player);
             // Save location before teleportation
-            playerData.saveLocation(new Location(player));
+//            playerData.saveLocation(new Location(player));
         }
     }
 

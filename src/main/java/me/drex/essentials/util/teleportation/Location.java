@@ -51,7 +51,7 @@ public record Location(Vec3 pos, float yaw, float pitch, ResourceLocation dimens
             if (entity.teleportTo(level, pos.x, pos.y, pos.z, EnumSet.noneOf(Relative.class),  Mth.wrapDegrees(yaw),  Mth.wrapDegrees(pitch), true)) {
                 if (saveLocation && entity instanceof ServerPlayer player) {
                     PlayerData playerData = DataStorage.updatePlayerData(player);
-                    playerData.saveLocation(currentLocation);
+//                    playerData.saveLocation(currentLocation);
                 }
 
                 if (!(entity instanceof LivingEntity livingEntity) || !livingEntity.isFallFlying()) {
