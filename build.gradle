@@ -1,8 +1,8 @@
 import org.jetbrains.changelog.Changelog
 
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT'
-    id "me.modmuss50.mod-publish-plugin" version "0.7.4"
+    id 'fabric-loom' version '1.10-SNAPSHOT'
+    id "me.modmuss50.mod-publish-plugin" version "0.8.4"
     id 'maven-publish'
     id 'org.jetbrains.changelog' version '2.+'
 }
@@ -14,7 +14,7 @@ group = project.maven_group
 repositories {
     mavenCentral()
     maven { url "https://maven.nucleoid.xyz/" }
-    maven { url "https://jitpack.io" }
+    maven { url "https://api.modrinth.com/maven" }
 }
 
 loom {
@@ -44,12 +44,18 @@ dependencies {
     modImplementation include("eu.pb4:placeholder-api:${project.placeholder_api_version}")
     modImplementation include("eu.pb4:player-data-api:${project.player_data_api_version}")
     modImplementation include("eu.pb4:common-protection-api:${project.common_protection_api_version}")
-    modImplementation include("com.github.DrexHD:message-api:${project.message_api_version}")
+    modImplementation include("maven.modrinth:message-api:${project.message_api_version}")
+}
+
+fabricApi {
+    configureDataGeneration() {
+        client = true
+    }
 }
 
 publishMods {
     file = remapJar.archiveFile
-    type = BETA
+    type = STABLE
     changelog = fetchChangelog()
 
     displayName = "Fabric Essentials ${version.get()}"
@@ -88,6 +94,17 @@ java {
 
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.sourcesJar.dependsOn runDatagen
+
+jar {
+    from file('src/main/generated')
+
+    // A bit of a hack to allow the generated sources when they already exist
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    dependsOn 'runDatagen'
 }
 
 jar {

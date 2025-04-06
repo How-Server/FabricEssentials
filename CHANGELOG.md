@@ -6,6 +6,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.2] - 2025-03-30
+### Fixed
+- Client side crash
+
+## [1.4.1] - 2025-03-30
+### Fixed
+- Styled input issues
+
+## [1.4.0] - 2025-02-15
+### Added
+- Config option to allow partial names in argument
+- Hat deny item tag
+
+### Changed
+- Improved tpa command usage (@ifloppy)
+
+## [1.3.0] - 2024-12-28
+### Added
+- Essential-Commands data importer
+
+### Changed
+- Promote to stable
+
 ## [1.2.3] - 2024-12-16
 ### Changed
 - Allow running in singleplayer

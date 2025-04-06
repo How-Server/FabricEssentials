@@ -3,6 +3,7 @@ package me.drex.essentials.command.impl.misc;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.drex.essentials.item.ModItemTags;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -33,13 +34,18 @@ public class HatCommand extends Command {
     protected int setHat(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         Inventory inventory = player.getInventory();
-        ItemStack selected = inventory.getSelected();
+        ItemStack selected = inventory.getSelectedItem();
         ResourceLocation resourceLocation = BuiltInRegistries.ITEM.getKey(selected.getItem());
         if (!check(ctx.getSource(), "item." + resourceLocation.getPath())) {
             ctx.getSource().sendFailure(localized("fabric-essentials.commands.hat.no_permission"));
             return FAILURE;
         }
-        ItemStack head = inventory.getArmor(EquipmentSlot.HEAD.getIndex());
+        ItemStack head = inventory.getItem(EquipmentSlot.HEAD.getIndex(Inventory.INVENTORY_SIZE));
+
+        if (selected.is(ModItemTags.HAT_DENY) && !check(ctx.getSource(), "bypassDeny")) {
+            ctx.getSource().sendFailure(localized("fabric-essentials.commands.hat.deny"));
+            return FAILURE;
+        }
 
         if (EnchantmentHelper.has(head, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE) && !check(ctx.getSource(), "bypassBindingCurse")) {
             ctx.getSource().sendFailure(localized("fabric-essentials.commands.hat.binding_curse"));
@@ -48,7 +54,7 @@ public class HatCommand extends Command {
 
         ctx.getSource().sendSuccess(() -> localized("fabric-essentials.commands.hat"), false);
         player.setItemInHand(InteractionHand.MAIN_HAND, head);
-        inventory.armor.set(EquipmentSlot.HEAD.getIndex(), selected);
+        inventory.setItem(EquipmentSlot.HEAD.getIndex(Inventory.INVENTORY_SIZE), selected);
         return SUCCESS;
     }
 }
