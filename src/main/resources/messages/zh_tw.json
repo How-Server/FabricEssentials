@@ -2,13 +2,13 @@
   "fabric-essentials.async.loading_chunks.0": "<aqua>正在載入區塊.",
   "fabric-essentials.async.loading_chunks.1": "<aqua>正在載入區塊..",
   "fabric-essentials.async.loading_chunks.2": "<aqua>正在載入區塊...",
-  "fabric-essentials.async.loading_chunks.done": "<green>區塊載入好了！",
+  "fabric-essentials.async.loading_chunks.done": "<green>區塊已載入！",
   "fabric-essentials.async.active": "<red>你已經在為其它東西載入區塊了，請等候...",
   "fabric-essentials.async.error": "<red>在載入區塊的時候發生了錯誤：${exception_message}",
   "fabric-essentials.async.not_loaded": "<red>區塊未正確加載！",
 
-  "fabric-essentials.commands.back": "<yellow>傳送到<gold>最近的地點<yellow>在<gold>${location_pos_x} ${location_pos_y} ${location_pos_z} <yellow>於<gold>${location_dimension}<yellow>.",
-  "fabric-essentials.commands.back.empty": "<red>你沒有已保存的地點！",
+  "fabric-essentials.commands.back": "<yellow>傳送到<gold>最近的死亡點<yellow>在<gold>${location_pos_x} ${location_pos_y} ${location_pos_z}<yellow> 於<gold>${location_dimension}<yellow>.",
+  "fabric-essentials.commands.back.empty": "<red>你沒有已保存的死亡點！",
 
   "fabric-essentials.commands.broadcast": "<white>[<red>廣播<white>] <gray>${message}",
 
@@ -49,7 +49,7 @@
   "fabric-essentials.commands.heal.other": "<yellow>你治療了<gold>%player:displayname%<yellow>。",
 
   "fabric-essentials.commands.home.self": "<yellow>正在傳送到家<gold>${home_name}<yellow>！",
-  "fabric-essentials.commands.home.other": "<yellow>正在把<gold>%player:displayname%傳送到家<gold>${home_name}<yellow><yellow>！",
+  "fabric-essentials.commands.home.other": "<yellow>正在傳送到<gold>%player:displayname%<yellow>的家<gold>${home_name}<yellow><yellow>！",
   "fabric-essentials.commands.home.unknown": "<red>未知的家名稱！",
 
   "fabric-essentials.commands.homes.self.empty": "<red>你還沒有設置家！",
